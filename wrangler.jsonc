@@ -22,8 +22,8 @@
     "durable_objects": {
     "bindings": [
       {
-        "name": "MY_DURABLE_OBJECT",
-        "class_name": "MyDurableObject"
+        "name": "LISTS",
+        "class_name": "List"
       }
     ]
   },
@@ -31,7 +31,7 @@
     {
       "tag": "v1",
       "new_sqlite_classes": [
-        "MyDurableObject"
+        "List"
       ]
     }
   ],
