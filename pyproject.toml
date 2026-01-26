@@ -2,11 +2,15 @@
 name = "pij"
 version = "0.1.0"
 dependencies = [
-    "fastapi"
+  "fastapi",
+  "pydantic",
+  "python-multipart",
+  "aiohttp",
+  "tldextract",
+  "ipwhois",
+  "dnspython",
+  "shodan",
 ]
 
 [dependency-groups]
-dev = [
-    "workers-py",
-    "workers-runtime-sdk"
-]
+dev = ["workers-py", "workers-runtime-sdk"]
