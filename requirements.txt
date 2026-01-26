@@ -1,1 +1,11 @@
-
+fastapi
+pydantic
+typing-extensions
+python-multipart
+uvicorn
+webtypy
+ipwhois
+dnspython
+shodan
+tldextract
+aiohttp
