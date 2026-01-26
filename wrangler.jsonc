@@ -8,20 +8,40 @@
 	"main": "src/entry.py",
 	"compatibility_date": "2025-09-27",
 	"compatibility_flags": [
-		"python_workers"
+		"python_workers",
+		"python_dedicated_snapshot"
 	],
 	"assets": {
 		// The path to the directory containing the `index.html` file to be served at `/`
 		"directory": "./public"
 	},
+    "ai": {
+    "binding": "AI"
+  },
+  "durable_objects": {
+		"bindings": [
+			{
+				"name": "LISTS",
+				"class_name": "List"
+			}
+		]
+	},
+	"migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "List"
+      ]
+    }
+  ],
 	"observability": {
 		"enabled": true
-	}
+	},
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
 	 */
-	// "placement": {  "mode": "smart" }
+	"placement": {  "mode": "smart" }
 	/**
 	 * Bindings
 	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
