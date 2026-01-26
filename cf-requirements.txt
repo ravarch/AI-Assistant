@@ -1,4 +1,3 @@
-fastapi>=0.128.0
 pydantic>=2.12.0
 typing-extensions>=4.0.0
 python-multipart>=0.0.9
