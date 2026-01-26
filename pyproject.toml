@@ -15,6 +15,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "workers-py"
+    "workers-py",
     "workers-runtime-sdk"
 ]
