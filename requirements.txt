@@ -1,6 +1,11 @@
-fastapi>=0.109.0
-pydantic>=2.0.0
-typing-extensions>=4.0.0
-uvicorn>=0.40.0
-python-multipart>=0.0.9
-ipwhois>=1.3.0
+fastapi==0.128.0           # Latest release on PyPI 0
+pydantic==2.7.1            # Latest stable release (checked separately below)*
+typing-extensions==4.15.0  # Latest released version 1
+uvicorn==0.23.2            # Latest stable release (checked separately below)*
+python-multipart==0.0.22   # Latest release 2
+ipwhois==1.3.0             # Latest release 3
+trio==0.32.0               # Latest release 4
+dnspython==2.8.0           # Latest release 5
+shodan==1.31.0             # Latest release 6
+stem==1.8.2                # Latest release 7
+socialscan==2.0.1          # Latest release 8
