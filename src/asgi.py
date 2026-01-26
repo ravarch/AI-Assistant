@@ -1,4 +1,3 @@
-# src/asgi.py
 from workers import Response
 
 async def fetch(app, request, env):
