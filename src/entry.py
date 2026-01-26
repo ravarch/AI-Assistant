@@ -1,40 +1,45 @@
-from workers import WorkerEntrypoint
-from fastapi import FastAPI, Request
-from pydantic import BaseModel
-import asgi
+from workers import WorkerEntrypoint, Response, DurableObject
+from pyodide.ffi import to_js
+from urllib.parse import urlparse
+
+
+class List(DurableObject):
+    async def get_messages(self):
+        messages = await self.ctx.storage.get("messages")
+        return messages if messages else []
+
+    async def add_message(self, message):
+        messages = await self.get_messages()
+        messages.append(message)
+        await self.ctx.storage.put("messages", to_js(messages))
+        return
+
 
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
-        return await asgi.fetch(app, request, self.env)
+        url = urlparse(request.url)
 
-app = FastAPI()
+        list_id = url.path.split("/")[1]
+        if list_id == "":
+            return Response(
+                "Go to /<list_id>/show to see messages\nGo to /<list_id>/add/<message> to add a message",
+                status=400,
+            )
 
-@app.get("/")
-async def root():
-    return {"message": "Hello, World!"}
+        do_id = self.env.LISTS.idFromName(list_id)
+        stub = self.env.LISTS.get(do_id)
 
-@app.get("/env")
-async def root(req: Request):
-    env = req.scope["env"]
-    return {"message": "Here is an example of getting an environment variable: " + env.MESSAGE}
+        # Note: This is adding a message via GET URL path for simplicity, in a real app, use a POST
+        if "/add" in url.path:
+            # message = await request.text()
+            message = url.path.split("/")[3]
+            await stub.add_message(message)
+            return Response("Message sent")
+        elif "/show" in url.path:
+            messages = await stub.get_messages()
+            if not messages:
+                return Response("No messages")
 
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
-
-@app.post("/items/")
-async def create_item(item: Item):
-    return item
-
-@app.put("/items/{item_id}")
-async def create_item(item_id: int, item: Item, q: str | None = None):
-    result = {"item_id": item_id, **item.dict()}
-    if q:
-        result.update({"q": q})
-    return result
-
-@app.get("/items/{item_id}")
-async def read_item(item_id: int):
-    return {"item_id": item_id}
+            return Response("\n".join(messages))
+        else:
+            return Response("Not Found", status=404)
