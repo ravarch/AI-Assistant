@@ -6,8 +6,6 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.128.0",
-    "langchain>=1.2.4",
-    "pathlib>=1.0.1",
     "playwright>=1.57.0",
     "pydantic>=2.12.5",
     "webtypy>=0.1.7",
