@@ -5,13 +5,16 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "aiohttp>=3.13.3",
-    "playwright>=1.57.0",
+    "fastapi",
+    "playwright",
     "pydantic>=2.12.5",
     "webtypy>=0.1.7",
+    "markupsafe",
+    "jinja2",
 ]
 
 [dependency-groups]
 dev = [
     "workers-py"
+    "workers-runtime-sdk"
 ]
