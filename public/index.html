@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIJ // Threat Intelligence Console</title>
+    <title>FLUX // RESEARCH STATION</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         tailwind.config = {
@@ -19,19 +18,13 @@
                         void: '#030304',
                         panel: '#0C0C0E',
                         border: '#1F1F23',
-                        brand: { DEFAULT: '#00F0FF', dim: 'rgba(0, 240, 255, 0.1)' },
-                        risk: { safe: '#00FF94', warn: '#FFB800', crit: '#FF003C' }
+                        brand: { DEFAULT: '#FF2A6D', dim: 'rgba(255, 42, 109, 0.1)' },
+                        accent: { DEFAULT: '#05D9E8', dim: 'rgba(5, 217, 232, 0.1)' },
+                        warn: '#FFB800'
                     },
                     fontFamily: {
                         mono: ['"JetBrains Mono"', 'monospace'],
                         sans: ['"Inter"', 'sans-serif']
-                    },
-                    animation: {
-                        'scan-line': 'scan 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'pulse-slow': 'pulse 3s infinite'
-                    },
-                    keyframes: {
-                        scan: { '0%': { top: '-5%' }, '100%': { top: '105%' } }
                     }
                 }
             }
@@ -40,185 +33,122 @@
     
     <style>
         body { background-color: #030304; color: #E0E0E0; }
-        .glass-panel { background: rgba(12, 12, 14, 0.7); backdrop-filter: blur(12px); border: 1px solid #1F1F23; }
+        .glass-panel { background: rgba(12, 12, 14, 0.8); backdrop-filter: blur(12px); border: 1px solid #1F1F23; }
         .cyber-input { background: rgba(0,0,0,0.3); border: 1px solid #333; transition: all 0.2s; }
-        .cyber-input:focus { border-color: #00F0FF; box-shadow: 0 0 0 1px #00F0FF, 0 0 15px rgba(0,240,255,0.1); outline: none; }
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00F0FF; }
+        .cyber-input:focus { border-color: #05D9E8; outline: none; box-shadow: 0 0 15px rgba(5, 217, 232, 0.1); }
+        /* Matrix Grid Background */
+        .bg-grid { background-image: radial-gradient(#1f1f23 1px, transparent 1px); background-size: 20px 20px; }
     </style>
 </head>
 
-<body class="font-sans min-h-screen flex flex-col" x-data="app()">
+<body class="font-sans min-h-screen flex flex-col bg-grid" x-data="app()">
 
     <nav class="fixed top-0 w-full z-50 glass-panel border-b-white/5 h-16 flex items-center justify-between px-6">
         <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-brand rounded-sm flex items-center justify-center text-void font-bold font-mono text-xl">P</div>
-            <span class="font-mono font-bold tracking-tight text-white">PIJ<span class="text-brand">.INTEL</span></span>
+            <div class="w-8 h-8 bg-brand rounded-sm flex items-center justify-center text-void font-bold font-mono text-xl">R</div>
+            <span class="font-mono font-bold tracking-tight text-white">FLUX<span class="text-brand">.RESEARCH</span></span>
         </div>
-        <div class="flex items-center gap-4 text-xs font-mono text-gray-500">
-            <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-risk-safe animate-pulse"></span>
-                <span x-text="'NODE: ' + connectionStatus"></span>
+        <div class="flex items-center gap-4 text-xs font-mono">
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded bg-white/5 border border-white/10">
+                <span class="text-gray-400">STORAGE:</span>
+                <span class="text-accent">CLOUDFLARE R2</span>
             </div>
         </div>
     </nav>
 
-    <main class="flex-1 pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <main class="flex-1 pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <aside class="lg:col-span-3 space-y-6">
-            <div class="glass-panel p-5 rounded-xl">
-                <label class="text-xs font-mono text-brand uppercase mb-2 block">Target Vector</label>
-                <div class="relative group">
-                    <input type="text" x-model="url" @keydown.enter="initScan" 
-                           placeholder="example.com"
-                           class="cyber-input w-full px-4 py-3 rounded-lg font-mono text-sm text-white placeholder-gray-700">
-                    <button @click="initScan" :disabled="loading"
-                            class="absolute right-2 top-2 bottom-2 px-3 bg-white/5 hover:bg-brand hover:text-void rounded text-xs font-mono uppercase transition-colors disabled:opacity-50">
-                        <i x-show="!loading" class="ph-bold ph-crosshair"></i>
-                        <i x-show="loading" class="ph-bold ph-spinner animate-spin"></i>
+        <aside class="lg:col-span-4 space-y-6">
+            
+            <div class="glass-panel p-6 rounded-xl space-y-5 border-l-2 border-l-brand">
+                <div class="flex justify-between items-end">
+                    <label class="text-xs font-mono text-brand uppercase">Research Subject</label>
+                    <span class="text-[10px] text-gray-500 font-mono">V 2.0.1</span>
+                </div>
+                
+                <textarea x-model="concept" rows="3" 
+                          class="cyber-input w-full p-4 rounded-lg font-mono text-sm text-white placeholder-gray-700 resize-none"
+                          placeholder="e.g. 'A futuristic city built inside a giant tree'"></textarea>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-mono text-gray-500 uppercase block mb-1">Model Engine</label>
+                        <select x-model="model" class="cyber-input w-full px-3 py-2 rounded text-xs text-accent bg-black">
+                            <option value="schnell">FLUX 1 SCHNELL (Fast)</option>
+                            <option value="dev">FLUX 2 DEV (Detail)</option>
+                            <option value="klein">FLUX 2 KLEIN (Balanced)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-mono text-gray-500 uppercase block mb-1">Steps</label>
+                        <input type="number" x-model.number="steps" class="cyber-input w-full px-3 py-2 rounded text-xs" min="4" max="50">
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button @click="startResearch" :disabled="working || !concept"
+                            class="w-full py-4 cyber-input bg-white/5 hover:bg-brand hover:text-void hover:border-brand transition text-xs font-mono uppercase font-bold tracking-widest flex items-center justify-center gap-2 group">
+                        <i class="ph-bold ph-brain" :class="working ? 'animate-pulse' : ''"></i>
+                        <span x-text="working ? 'PROCESSING...' : 'INITIATE DEEP RESEARCH'"></span>
                     </button>
                 </div>
-                <div x-show="error" class="mt-3 text-xs text-risk-crit font-mono border-l-2 border-risk-crit pl-2" x-text="error"></div>
             </div>
 
-            <div class="glass-panel p-0 rounded-xl overflow-hidden flex flex-col max-h-[60vh]">
-                <div class="p-4 border-b border-white/5 bg-white/5 flex justify-between items-center">
-                    <h3 class="text-xs font-mono uppercase text-gray-400">Recent Ops</h3>
-                    <button @click="clearHistory" class="text-xs text-gray-600 hover:text-risk-crit transition"><i class="ph-fill ph-trash"></i></button>
-                </div>
-                <div class="overflow-y-auto p-2 space-y-1">
-                    <template x-for="item in history" :key="item.id">
-                        <button @click="loadFromHistory(item)" 
-                                class="w-full text-left p-3 rounded hover:bg-white/5 transition group border border-transparent hover:border-white/10 relative overflow-hidden">
-                            <div class="flex justify-between items-start mb-1">
-                                <span class="font-mono text-xs text-brand truncate w-2/3" x-text="item.url"></span>
-                                <span class="text-[10px] uppercase px-1.5 py-0.5 rounded" 
-                                      :class="item.verdict.malicious ? 'bg-risk-crit/20 text-risk-crit' : 'bg-risk-safe/20 text-risk-safe'"
-                                      x-text="item.verdict.malicious ? 'THREAT' : 'CLEAN'"></span>
-                            </div>
-                            <div class="text-[10px] text-gray-600" x-text="new Date(item.meta.time).toLocaleString()"></div>
-                        </button>
-                    </template>
-                    <div x-show="history.length === 0" class="p-4 text-center text-xs text-gray-700 font-mono">NO DATA LOGGED</div>
-                </div>
+            <div x-show="analysis" x-transition class="glass-panel p-5 rounded-xl border-l-2 border-l-accent space-y-3">
+                <h3 class="text-xs font-mono text-accent uppercase flex items-center gap-2">
+                    <i class="ph-bold ph-read-cv-logo"></i> Analysis Log
+                </h3>
+                <p class="text-xs text-gray-400 font-mono leading-relaxed" x-text="analysis"></p>
+                <div class="h-px bg-white/10 my-2"></div>
+                <h3 class="text-xs font-mono text-gray-500 uppercase">Optimized Prompt</h3>
+                <p class="text-xs text-white font-mono bg-black/30 p-2 rounded border border-white/5" x-text="prompt"></p>
             </div>
+
         </aside>
 
-        <section class="lg:col-span-9 space-y-6">
-            
-            <div x-show="!data && !loading" class="h-full flex flex-col items-center justify-center text-gray-700 space-y-4 border-2 border-dashed border-white/5 rounded-xl min-h-[400px]">
-                <i class="ph-duotone ph-radar text-6xl opacity-20"></i>
-                <p class="font-mono text-sm">AWAITING TARGET COORDINATES</p>
-            </div>
-
-            <div x-show="loading && !data" class="h-full flex flex-col items-center justify-center space-y-6 min-h-[400px]">
-                <div class="relative w-32 h-32">
-                    <div class="absolute inset-0 border-t-2 border-brand rounded-full animate-spin"></div>
-                    <div class="absolute inset-4 border-b-2 border-purple-500 rounded-full animate-spin" style="animation-duration: 2s"></div>
-                    <div class="absolute inset-0 flex items-center justify-center font-mono text-xs text-brand animate-pulse">SCANNING</div>
-                </div>
-                <div class="font-mono text-xs text-gray-500">INTERROGATING CLOUDFLARE EDGE...</div>
-            </div>
-
-            <div x-show="data" class="space-y-6" x-transition.opacity.duration.500ms>
+        <section class="lg:col-span-8 h-full min-h-[600px]">
+            <div class="glass-panel w-full h-full rounded-xl flex items-center justify-center relative overflow-hidden p-1">
                 
-                <div class="glass-panel p-6 rounded-xl flex flex-col md:flex-row gap-6 items-center justify-between relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-r opacity-10" 
-                         :class="data?.verdict?.malicious ? 'from-risk-crit to-transparent' : 'from-risk-safe to-transparent'"></div>
-                    
-                    <div class="relative z-10 flex items-center gap-4">
-                        <div class="w-16 h-16 rounded-lg flex items-center justify-center text-3xl border border-white/10 bg-black/50"
-                             :class="data?.verdict?.malicious ? 'text-risk-crit border-risk-crit' : 'text-risk-safe border-risk-safe'">
-                            <i :class="data?.verdict?.malicious ? 'ph-fill ph-skull' : 'ph-fill ph-shield-check'"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-2xl font-bold tracking-tight text-white" 
-                                x-text="data?.verdict?.malicious ? 'THREAT DETECTED' : 'TARGET SECURE'"></h2>
-                            <p class="font-mono text-xs text-gray-400 mt-1">
-                                URL: <span x-text="data?.meta?.url" class="text-white select-all"></span>
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="relative z-10 flex gap-8 text-center">
-                        <div>
-                            <div class="text-xs font-mono text-gray-500 uppercase">Risk Score</div>
-                            <div class="text-2xl font-bold font-mono" x-text="data?.verdict?.score || 0"></div>
-                        </div>
-                        <div>
-                            <div class="text-xs font-mono text-gray-500 uppercase">Technologies</div>
-                            <div class="text-2xl font-bold font-mono" x-text="data?.tech?.length || 0"></div>
-                        </div>
-                        <div>
-                            <div class="text-xs font-mono text-gray-500 uppercase">Requests</div>
-                            <div class="text-2xl font-bold font-mono" x-text="data?.requests?.length || 0"></div>
-                        </div>
-                    </div>
+                <div x-show="!result && !working" class="text-center space-y-4 opacity-30">
+                    <i class="ph-duotone ph-aperture text-6xl"></i>
+                    <p class="font-mono text-sm tracking-widest">AWAITING INPUT</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <div class="glass-panel p-6 rounded-xl">
-                        <h3 class="font-mono text-xs text-brand uppercase mb-4 flex items-center gap-2">
-                            <i class="ph-bold ph-globe"></i> Network Intelligence
-                        </h3>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between border-b border-white/5 pb-2">
-                                <span class="text-gray-500">ASN</span>
-                                <span class="font-mono text-white" x-text="data?.network?.asn"></span>
-                            </div>
-                            <div class="flex justify-between border-b border-white/5 pb-2">
-                                <span class="text-gray-500">Organization</span>
-                                <span class="font-mono text-white text-right" x-text="data?.network?.asn_org"></span>
-                            </div>
-                            <div class="flex justify-between border-b border-white/5 pb-2">
-                                <span class="text-gray-500">IP Address</span>
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-risk-safe"></span>
-                                    <span class="font-mono text-white" x-text="data?.network?.ip"></span>
-                                </div>
-                            </div>
-                            <div class="flex justify-between pt-2">
-                                <span class="text-gray-500">Server Location</span>
-                                <span class="font-mono text-brand" x-text="data?.network?.country"></span>
-                            </div>
-                        </div>
+                <div x-show="working" class="absolute inset-0 z-20 bg-void/90 backdrop-blur-sm flex flex-col items-center justify-center space-y-4">
+                    <div class="relative">
+                        <div class="w-16 h-16 border-t-2 border-brand rounded-full animate-spin"></div>
+                        <div class="absolute inset-0 border-r-2 border-accent rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 3s"></div>
                     </div>
-
-                    <div class="glass-panel p-1 rounded-xl relative overflow-hidden group h-64 bg-black">
-                        <template x-if="data">
-                            <div class="w-full h-full relative">
-                                <div class="absolute inset-0 bg-brand/5 pointer-events-none z-10 animate-scan-line"></div>
-                                <img :src="`https://api.cloudflare.com/client/v4/accounts/${accountId}/urlscanner/v2/screenshots/${data.meta.id}.png?resolution=desktop`" 
-                                     class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                                     alt="Target Screenshot">
-                                <div class="absolute bottom-3 right-3 z-20 px-2 py-1 bg-black/80 backdrop-blur text-[10px] font-mono border border-white/10 rounded">
-                                    LIVE CAPTURE
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-
-                    <div class="glass-panel p-6 rounded-xl md:col-span-2">
-                        <h3 class="font-mono text-xs text-purple-400 uppercase mb-4 flex items-center gap-2">
-                            <i class="ph-bold ph-cpu"></i> Identified Technologies
-                        </h3>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="tech in data?.tech">
-                                <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-md text-xs text-gray-300 flex items-center gap-2 hover:border-brand/50 transition-colors cursor-default">
-                                    <span x-text="tech.name"></span>
-                                    <span class="px-1.5 py-0.5 bg-black rounded text-[9px] text-gray-500" x-text="tech.categories[0]"></span>
-                                </span>
-                            </template>
-                            <span x-show="!data?.tech?.length" class="text-gray-600 italic text-sm">No stack signatures detected.</span>
-                        </div>
-                    </div>
-
+                    <p class="font-mono text-xs text-accent animate-pulse" x-text="statusText"></p>
                 </div>
 
+                <template x-if="result">
+                    <div class="relative w-full h-full group">
+                        <img :src="result.url" class="w-full h-full object-contain rounded-lg shadow-2xl">
+                        
+                        <div class="absolute top-4 right-4 flex gap-2">
+                            <a :href="result.url" target="_blank" class="p-2 bg-black/50 backdrop-blur text-white rounded border border-white/10 hover:bg-accent hover:text-void transition">
+                                <i class="ph-bold ph-arrow-square-out"></i>
+                            </a>
+                            <a :href="result.url" download class="p-2 bg-black/50 backdrop-blur text-white rounded border border-white/10 hover:bg-brand hover:text-void transition">
+                                <i class="ph-bold ph-download"></i>
+                            </a>
+                        </div>
+
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <div class="bg-black/80 backdrop-blur p-4 rounded border border-white/10 flex justify-between items-center">
+                                <div>
+                                    <div class="text-[10px] text-gray-500 font-mono uppercase">Model Used</div>
+                                    <div class="text-xs text-accent font-mono" x-text="result.model.split('/').pop()"></div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] text-gray-500 font-mono uppercase">Resolution</div>
+                                    <div class="text-xs text-white font-mono">1024x1024</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
         </section>
     </main>
@@ -226,99 +156,52 @@
     <script>
         function app() {
             return {
-                url: '',
-                loading: false,
-                data: null,
-                error: null,
-                connectionStatus: 'ONLINE',
-                history: JSON.parse(localStorage.getItem('pij_history') || '[]'),
-                accountId: 'YOUR_ACCOUNT_ID_PLACEHOLDER', // In production, pass this via API or config
+                concept: '',
+                prompt: '',
+                analysis: '',
+                model: 'schnell',
+                steps: 4,
+                working: false,
+                statusText: '',
+                result: null,
 
-                async initScan() {
-                    if (!this.url) return;
-                    // Auto-prefix http if missing
-                    if (!/^https?:\/\//i.test(this.url)) {
-                        this.url = 'https://' + this.url;
-                    }
-
-                    this.loading = true;
-                    this.error = null;
-                    this.data = null;
+                async startResearch() {
+                    this.working = true;
+                    this.result = null;
+                    this.analysis = '';
                     
                     try {
-                        const res = await fetch('/api/scan', {
+                        // Phase 1: Deep Research
+                        this.statusText = 'AGENT THINKING...';
+                        const resResearch = await fetch('/api/research', {
                             method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({ url: this.url })
+                            body: JSON.stringify({ prompt: this.concept })
+                        });
+                        const dataResearch = await resResearch.json();
+                        this.analysis = dataResearch.analysis || "Analysis complete.";
+                        this.prompt = dataResearch.prompt || this.concept;
+
+                        // Phase 2: Generation
+                        this.statusText = `GENERATING ON ${this.model.toUpperCase()}...`;
+                        const resGen = await fetch('/api/generate', {
+                            method: 'POST',
+                            body: JSON.stringify({ 
+                                prompt: this.prompt, 
+                                steps: this.steps,
+                                model: this.model 
+                            })
                         });
                         
-                        if (!res.ok) throw new Error((await res.json()).detail || 'Init failed');
-                        const { id } = await res.json();
+                        const dataGen = await resGen.json();
+                        if(dataGen.error) throw new Error(dataGen.error);
                         
-                        await this.poll(id);
+                        this.result = dataGen;
+
                     } catch (e) {
-                        this.error = e.message;
-                        this.loading = false;
+                        alert('Error: ' + e.message);
+                    } finally {
+                        this.working = false;
                     }
-                },
-
-                async poll(id) {
-                    const maxRetries = 20;
-                    let attempts = 0;
-                    
-                    const interval = setInterval(async () => {
-                        attempts++;
-                        try {
-                            const res = await fetch(`/api/scan/${id}`);
-                            if (res.status === 202) {
-                                if (attempts > maxRetries) {
-                                    clearInterval(interval);
-                                    throw new Error("Scan timeout");
-                                }
-                                return; // Keep polling
-                            }
-                            
-                            const result = await res.json();
-                            
-                            // Get Account ID for screenshot URL construction if needed
-                            // (In a real app, the API would return the full screenshot URL)
-                            this.accountId = result.meta.id.split('-')[0]; // Mocking or extraction logic
-
-                            this.data = result;
-                            this.saveToHistory(result);
-                            this.loading = false;
-                            clearInterval(interval);
-                        } catch (e) {
-                            clearInterval(interval);
-                            this.error = e.message;
-                            this.loading = false;
-                        }
-                    }, 2000);
-                },
-
-                saveToHistory(result) {
-                    const item = {
-                        id: result.meta.id,
-                        url: result.meta.url,
-                        meta: result.meta,
-                        verdict: result.verdict
-                    };
-                    // Prepend and limit to 10
-                    this.history = [item, ...this.history.filter(h => h.id !== item.id)].slice(0, 10);
-                    localStorage.setItem('pij_history', JSON.stringify(this.history));
-                },
-
-                loadFromHistory(item) {
-                    // In a real app, we might re-fetch full details if history only stores summaries
-                    // For now, we assume we want to re-fetch the full report or just view the item
-                    // Let's re-fetch to ensure fresh data or view cached
-                    this.loading = true;
-                    this.poll(item.id); 
-                },
-
-                clearHistory() {
-                    this.history = [];
-                    localStorage.removeItem('pij_history');
                 }
             }
         }
